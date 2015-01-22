@@ -3,17 +3,17 @@ permalink:        pretty
 relative_permalinks: true
 
 # Setup
-title:            Poole
-tagline:          test
-url:              http://getpoole.com
+title:            Stefan Schimanski
+tagline:          blog
+url:              http://sttts.github.io
 paginate:         1
 baseurl:          /
 author:
-  name:           Mark Otto
-  url:            https://twitter.com/mdo
-  email:          markdotto@gmail.com
+  name:           Dr. Stefan Schimanski
+  url:            https://twitter.com/the1stein
+  email:          stefan.schimanski@gmail.com
 
 # Custom vars
 version:          1.0.0
 github:
-  repo:           https://github.com/poole/poole
+  repo:           https://github.com/sttts/sttts.github.io
