@@ -17,3 +17,7 @@ author:
 version:          1.0.0
 github:
   repo:           https://github.com/sttts/sttts.github.io
+
+syntax-highlighting:
+  enabled : true
+  css: syntax.css
