@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Poor Men's Cluster-Unique IPs for Docker Clusters
+title: Poor Men's Routable Container IPs for Docker Clusters
 date:   2015-01-31 18:22:07
 categories: docker network
 ---
