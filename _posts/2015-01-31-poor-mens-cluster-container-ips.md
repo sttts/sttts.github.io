@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Poor Men's Cluster-Unique IPs for Docker Clusters
-date:   2015-01-22 19:11:51
+date:   2015-01-31 18:22:07
 categories: docker mesos
 ---
 
