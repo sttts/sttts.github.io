@@ -98,8 +98,7 @@ node2 $ docker run -itd sttts/python-ubuntu:latest python -m SimpleHTTPServer 80
 29351797f33af256c60d79b5ad24fccb4f4a83b5a3bb5bd204e9eab38db77308
 {% raw %}
 node2 $ docker inspect --format '{{ .NetworkSettings.IPAddress }}' 2935
-{% endraw %}
-10.1.2.5
+{% endraw %}10.1.2.5
 
 node1 $ curl -I 10.1.2.5:8080
 HTTP/1.0 200 OK
