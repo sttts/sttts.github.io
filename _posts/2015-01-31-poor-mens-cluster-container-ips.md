@@ -14,7 +14,8 @@ We aim at
 - a cluster-wide, unique, automatically assigned IP address for every container
 - which is routable (switchable) within a private network
 - without any DHCP or other complicated infrastructure
-- without an overlay network.
+- without an overlay network
+- without OpenVSwitch.
 
 We need
 
