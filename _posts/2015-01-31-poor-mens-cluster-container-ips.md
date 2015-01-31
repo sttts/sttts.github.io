@@ -5,7 +5,7 @@ date:   2015-01-31 18:22:07
 categories: docker network
 ---
 
-Following up from {% post_url 2015-01-22-weave %} I want to line out how to setup Docker in a way that every container gets its own cluster-wide unique IP, without any overlay network layer. This for sure is neither rocket science, nor anything new. But as I see so many people using Docker in a cluster environment, still fighting with port management, I want to write down how this can be implemented in a few steps:
+Following up from ["Adventures with Weave and Docker"]({% post_url 2015-01-22-weave %}) I want to line out how to setup Docker in a way that every container gets its own cluster-wide unique IP, without any overlay network layer. This for sure is neither rocket science, nor anything new. But as I see so many people using Docker in a cluster environment, still fighting with port management, I want to write down how this can be implemented in a few steps:
 
 ##  0. The Goal and What We Need
 
