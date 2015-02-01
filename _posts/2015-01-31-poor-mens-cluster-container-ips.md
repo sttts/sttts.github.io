@@ -81,6 +81,8 @@ root@508b511dab3e:/# ip addr show dev eth0
        valid_lft forever preferred_lft forever
 ```
 
+**UPDATE:** Note that Docker assigns `10.1.1.2/16`, not `10.1.1.2/24` to the inteface inside the container. Hence, not further routing setup is necessary.
+
 ## 4. Cross Host Connectivity
 
 Make sure IPv4 forwarding is active:
