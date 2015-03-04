@@ -13,19 +13,19 @@ Erkan convinced me that Galera's cluster join+quorum logic makes it really suita
 * Galera nodes are all equal
 * Galera nodes cleanly leave a cluster on SIGTERM and are then just forgotten by the other nodes (read: do not count to the quorum anymore).
 
-Especially the first property means that quorum calculations are done ad-hoc when necessary. The necessary size of a surviving partition during a network split changes when nodes leaves cleanly or join the cluster. *This property is essential to scale up and down* in a Marathon like environment.
+Especially the first property means that quorum calculations are done ad-hoc when necessary. The required size of a surviving partition during a network split changes when nodes leave cleanly or join the cluster. *This property is essential to scale up and down* in a Marathon like environment.
 
 ## Seeding a cluster and join nodes
 
 When a first node of a cluster comes up (or after no partition with a quorum survived), this node must be "manually" declared as the seed node of new cluster (`--wsrep-new-cluster`).
 
-I will can all following nodes only "nodes" – in contrast to this "seed node".
+I am going to call all non-seed nodes only "nodes".
 
-When using the containers below or the Mesos Marathon `galera.json` app definition, the seed must be started first. When it is up, the *nodes* are started and join the *seed node*. **Then the seed node must be stopped.** The other nodes keep running. The reason for this is that the *seed node* will start a new cluster otherwise when restarted (e.g. by Marathon), even though the other *nodes* still form a valid cluster.
+When using the containers (compare below) manually or via the Mesos Marathon `galera.json` app definition, the seed must be started first. When it is up and healthy, the *nodes* are started and join the *seed node*. **Then the seed node must be stopped.** The other nodes keep running. The reason for this is that the *seed node* will start a new cluster again when restarted (e.g. by Marathon), even though the other *nodes* still form a valid cluster. This is probably not what one wants.
 
 ## Running the containers
 
-For the *seed node* and the normal *nodes* the same Docker container is used, namely [sttts/galera-mariadb-10.0-xtrabackup](https://registry.hub.docker.com/u/sttts/galera-mariadb-10.0-xtrabackup/). As the name suggests it uses MariaDB 10.0 with the Galera extension and xtrabackup for the initial SST (in contrast to rsync). The images are based on Ubuntu 14.04:
+For the *seed node* and the normal *nodes* the same Docker container is used, namely [sttts/galera-mariadb-10.0-xtrabackup](https://registry.hub.docker.com/u/sttts/galera-mariadb-10.0-xtrabackup/). As the name suggests it uses MariaDB 10.0 with the Galera extension and xtrabackup for the initial SST (in contrast to rsync). The images are based on Ubuntu 14.04 and MariaDB public packages. The same should work with Percona or MySQL packages:
 
 ```bash
 $ docker run -d -v /data:/var/lib/mysql -p 3306 -p 8080 \
@@ -42,26 +42,26 @@ $ docker run -d -v /data:/var/lib/mysql -p 3306 -p 8080 \
 
 ## Service discovery
 
-Galera nodes have to find each other. In my setup I have deployed [Consul](http://consul.io) as a DNS server for the `galera.services.dc1.consul` domain, using [progrium's registrator](https://github.com/gliderlabs/registrator) to register Docker containers. 
+Galera nodes have to find each other. In my setup I have deployed [Consul](http://consul.io) as a DNS server for the `galera.services.dc1.consul` domain, using [progrium's registrator](https://github.com/gliderlabs/registrator) to register Docker containers.
 
 Moreover, registrator is started with the `-internal` parameter such that
-the internal container IP is published in Consul. The network setup resembles what is described in my former post ["Adventures with Weave and Docker"](http://sttts.github.io/docker/weave/mesos/2015/01/22/weave.html).
+the internal container IP is published in Consul. This at least needs Consul 0.5. The network setup resembles what is described in my former post ["Adventures with Weave and Docker"](http://sttts.github.io/docker/weave/mesos/2015/01/22/weave.html).
 
-The consequence is that it is enough to pass `node galera.services.dc1.consul` to the container to find the existing cluster and join it.
+The consequence of all this is that it is enough to pass `node galera.services.dc1.consul` to the container to find the existing cluster and join it. The [entrypoint script of the container](https://github.com/sttts/docker-galera-mariadb-10.0/blob/master/start) will resolve the domain `galera.services.dc1.consul` and pass the resulting IPs as `qcomm://` parameter to `mysqld`.
 
 ## Health Checks
 
-The containers not only launch the `mysqld` daemon on port `3306`, but also a small health check web server on port `8080`. This web server provides a web service with the following understanding of the HTTP status code:
+The containers not only launch the `mysqld` daemon on port `3306`, but also a small health check web server on port `8080`. This web server provides a web service with the following understanding of the HTTP status codes:
 
 * 100 - the initial sync is not finished yet
 * 200 - the node is in sync and writable
 * 503 - the node is not in sync and not doing the initial sync.
 
-It is easy to use this as a health check, e.g inside Marathon, compare below.
+It is easy to use this as a health check inside Marathon, compare `galera.json`below.
 
 The [health check itself](https://github.com/sttts/galera-healthcheck) is written in Go, forked from [CloudFoundry](https://github.com/cloudfoundry-incubator/galera-healthcheck) and extended with the HTTP code 100 support.
 
-The latter is needed in order to make Marathon ignore the non-healthy state of a node which needs time for its initial sync, potentially longer than the grace period that is defined in the Marathon app health check definition. For this reason, the `ignoreHttp1xx` option is activated in the Marthon app. In theory (not tested due to the lack of a big databases which actually takes long to sync with xtrabackup) Marathon should leave the task running, even though the SST might take long, minutes or hours.
+The latter is needed in order to make Marathon ignore the non-healthy state of a node which needs time for its initial sync, potentially longer than the grace period that is defined in the Marathon app health check definition. For this reason, the `ignoreHttp1xx` option is activated in the Marathon app (available from Marathon >0.8.1 on). In theory (not tested due to the lack of a big databases which actually takes long to sync with xtrabackup) Marathon should leave the task running, even though the SST might take long, minutes or hours.
 
 ## Mesos Marathon
 
@@ -86,7 +86,11 @@ Content-Length: 92
 {"version":"2015-03-04T16:48:02.301Z","deploymentId":"df4d885e-dde8-4021-9ba6-78b02737454d"}
 ```
 
-When the *seed* task comes up and is green the other nodes can be scaled up, e.g. via Marathon's web interface. After the first normal *node* is healthy, the *seed* can **and should** be suspended.
+When the *seed* task comes up and is green the other nodes can be scaled up, e.g. via Marathon's web interface.
+
+![Marathon with 3 nodes]({{ site.url }}/images/marathon.png)
+
+After the first normal *node* is healthy, the *seed* can **and should** be suspended.
 
 Congratulation, your cluster is up!
 
