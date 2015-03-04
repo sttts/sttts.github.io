@@ -88,7 +88,7 @@ Content-Length: 92
 
 When the *seed* task comes up and is green the other nodes can be scaled up, e.g. via Marathon's web interface.
 
-![Marathon with 3 nodes]({{ site.url }}/images/marathon.png)
+![Marathon with 3 nodes](http://i57.tinypic.com/10qjac1.png)
 
 After the first normal *node* is healthy, the *seed* can **and should** be suspended.
 
