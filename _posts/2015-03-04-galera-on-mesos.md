@@ -211,7 +211,7 @@ Then fixed volumes from the host can be used without conflict of multiple Galera
 
 Of course, in the long run this is not really what we want. Both, [flocker](https://github.com/clusterhq/flocker) and [Quobyte's cluster file system](http://www.quobyte.com) look promising and will be subject of a follow-up post probably. Quobyte explicitly claims that it is suitable for databases, something I would not say about glusterfs or cephfs if you are interested in performance.
 
-In this context of performance note the value `0` of `innodb_flush_log_at_trx_commit` in [`galera.cnf`](https://github.com/sttts/docker-galera-mariadb-10.0/blob/master/conf.d/galera.cnf#L7). Because Galera guarantees synchronous query replication, the file system sync is not important anymore because on a hardware crash the other nodes will still have the data. Hence, the storage speed is less important than in a classical non-Galera setup.
+In this context of performance note the value `0` of `innodb_flush_log_at_trx_commit` in [galera.cnf](https://github.com/sttts/docker-galera-mariadb-10.0/blob/master/conf.d/galera.cnf#L7). Because Galera guarantees synchronous query replication, the file system sync is not important anymore because on a hardware crash the other nodes will still have the data. Hence, the storage speed is less important than in a classical non-Galera setup.
 
 Another interesting solution to watch getting developed in the storage arena is Mesos' native persistence data support. Twitter itself is actively working on getting MySQL ready with support for this. I am looking forward to see how Galera can make use of this as well.
 
