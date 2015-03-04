@@ -213,7 +213,7 @@ Of course, in the long run this is not really what we want. Both, [flocker](http
 
 In this context of performance note the value `0` of `innodb_flush_log_at_trx_commit` in [galera.cnf](https://github.com/sttts/docker-galera-mariadb-10.0/blob/master/conf.d/galera.cnf#L7). Because Galera guarantees synchronous query replication, the file system sync is not important anymore because on a hardware crash the other nodes will still have the data. Hence, the storage speed is less important than in a classical non-Galera setup.
 
-Another interesting solution to watch getting developed in the storage arena is Mesos' native persistence data support. Twitter itself is actively working on getting MySQL ready with support for this. I am looking forward to see how Galera can make use of this as well.
+Another interesting solution to watch getting developed in the storage arena is Mesos' native persistence data support. Twitter itself is actively working on getting MySQL ready with support for this, a talk about Mysos is submitted for the MesosCon 2015 in Seattle this summer. I am looking forward to see how Galera can make use of this as well.
 
 Just a moment ago Docker announced the take-over of SocketPlane. As storage is as important as network in a dynamic cluster world, let's see what happens in this area with all those projects coming up. Exciting times!
 
