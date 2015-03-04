@@ -51,6 +51,18 @@ The consequence is that it is enough to pass `node galera.services.dc1.consul` t
 
 ## Health Checks
 
+The containers not only launch the `mysqld` daemon on port `3306`, but also a small health check web server on port `8080`. This web server provides a web service with the following understanding of the HTTP status code:
+
+* 100 - the initial sync is not finished yet
+* 200 - the node is in sync and writable
+* 503 - the node is not in sync and not doing the initial sync.
+
+It is easy to use this as a health check, e.g inside Marathon, compare below.
+
+The [health check itself](https://github.com/sttts/galera-healthcheck) is written in Go, forked from [CloudFoundry](https://github.com/cloudfoundry-incubator/galera-healthcheck) and extended with the HTTP code 100 support.
+
+The latter is needed in order to make Marathon ignore the non-healthy state of a node which needs time for its initial sync, potentially longer than the grace period that is defined in the Marathon app health check definition. For this reason, the `ignoreHttp1xx` option is activated in the Marthon app. In theory (not tested due to the lack of a big databases which actually takes long to sync with xtrabackup) Marathon should leave the task running, even though the SST might take long, minutes or hours.
+
 ## Mesos Marathon
 
 To make Galera work as a Marathon application the two roles *node* and *seed* must be combined into an application group.
