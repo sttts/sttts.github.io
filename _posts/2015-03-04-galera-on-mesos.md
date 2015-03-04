@@ -242,10 +242,10 @@ The last commited transaction on this node was 2. As described the node with the
 
 ## Outlook
 
-Recovery is not really satisfactory. It is not clear how to recover a cluster which is down completely in a "Mesos-like" way. One has to access the tasks directly and moreover the time to do this is limited because Marathon restarts the tasks. Some more clever ideas a necessary here.
+Recovery is not really satisfactory. It is not clear how to recover a cluster which is down completely in a "Mesos-like" way. One has to access the tasks directly and moreover the time to do this is limited because Marathon restarts the tasks. Some more clever ideas are necessary here.
 
-The storage topic is quite in the move right now in the Docker and in the Mesos world. For now the static host volume kind of works, but of course much more dynamic solution would be great.
+The storage topic is quite in the move right now in the Docker and in the Mesos world. For now the static host volume kind of works, but of course much more dynamic solutions would be great.
 
-Because not many MySQL client libraries support Galera clients directly, it would make sense to include a haproxy (or some other MySQL supporting proxy) in front. Using the health check on port `8080`, which is used by Marathon to decide whether a node is healthy, can also used by this proxy to only redirect queries to `PRIMARY` and non-read-only nodes. This will probably be the next step – added later to this post – to get this into a production setup of an app based on Galera.
+Because not many MySQL client libraries support Galera clients directly, it would make sense to include a haproxy (or some other MySQL supporting proxy) in front of the Galera cluster. Using the health check on port `8080`, which is used by Marathon to decide whether a node is healthy, can also used by this proxy to only redirect queries to PRIMARY and non-read-only nodes. This will probably be the next step – added later to this post – to get this setup into a production environment of an app based on Galera.
 
 Finally it should be highlighted that Galera's cluster logic really feels like a great fit with the dynamic nature of a Mesos cluster. This is in contrast to a lot of other services which come from the static pre-Docker world. So I completely agree with Erkan that Galera does a lot of things right.
