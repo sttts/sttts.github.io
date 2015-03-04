@@ -2,7 +2,7 @@
 layout: post
 title: MariaDB Galera on a Mesos Cluster with Docker
 date:   2015-03-04 20:08:16
-categories: docker database mysql mariadb galera cluster
+categories: galera mesos
 ---
 
 Building on top of [Erkan Yanar](http://linsenraum.de/erkules/)'s work of packaging and running Galera in Docker containers ([Github project](https://github.com/erkules/mariadb-galera)) on [Giant Swarm](https://giantswarm.io), I concluded that also Galera and [Mesos](http://mesos.apache.org) in connection with Mesosphere's [Marathon](https://mesosphere.github.io/marathon/) are a great fit.
