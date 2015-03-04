@@ -5,7 +5,7 @@ date:   2015-03-04 20:08:16
 categories: galera mesos
 ---
 
-Building on top of [Erkan Yanar](http://linsenraum.de/erkules/)'s work of packaging and running Galera in Docker containers ([Github project](https://github.com/erkules/mariadb-galera)) on [Giant Swarm](https://giantswarm.io), I concluded that also Galera and [Mesos](http://mesos.apache.org) in connection with Mesosphere's [Marathon](https://mesosphere.github.io/marathon/) are a great fit.
+Building on top of [Erkan Yanar](http://linsenraum.de/erkules/)'s work of packaging and running Galera in Docker containers ([Github project](https://github.com/erkules/mariadb-galera)) on [Giant Swarm](https://giantswarm.io), I concluded that also Galera and [Mesos](http://mesos.apache.org) in connection with Mesosphere's [Marathon](https://mesosphere.github.io/marathon/) should be great fit.
 
 Erkan convinced me that Galera's cluster join+quorum logic makes it really suitable for a dynamic environment like a Mesos cluster. The main properties compared to other much more static distributed system - hello Redis, hello Mongo – are the following:
 
