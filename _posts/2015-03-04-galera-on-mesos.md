@@ -190,7 +190,7 @@ Here is the `galera.json`, tested with Marathon 0.8.1rc2:
 
 Intentionally I did not care about the storage yet in the Marathon app definition above. Not even a volume is used to map a directory from the host. For a production setup of course one has to solve this.
 
-The easiest solution for the moment (without [flocker](https://github.com/clusterhq/flocker) or [Quobytes](http://www.quobyte.com) offering) is to use volumes on the host where the set of hosts is known. This allows to use [Marathon constraints](https://mesosphere.github.io/marathon/docs/constraints.html) like this to run at most one instance on each of these hosts:
+The easiest solution for the moment (without [flocker](https://github.com/clusterhq/flocker) or [Quobyte's](http://www.quobyte.com) offering) is to use volumes on the host where the set of hosts is known. This allows to use [Marathon constraints](https://mesosphere.github.io/marathon/docs/constraints.html) like this to run at most one instance on each of these hosts:
 
 ```json
 "constraints": [
@@ -209,9 +209,13 @@ Then fixed volumes from the host can be used without conflict of multiple Galera
 },
 ```
 
-Of course, in the long run this is not really what we want. Both, [flocker](https://github.com/clusterhq/flocker) and [Quobytes](http://www.quobyte.com) look promising and will be subject of a follow-up post probably.
+Of course, in the long run this is not really what we want. Both, [flocker](https://github.com/clusterhq/flocker) and [Quobyte's cluster file system](http://www.quobyte.com) look promising and will be subject of a follow-up post probably. Quobyte explicitly claims that it is suitable for databases, something I would not say about glusterfs or cephfs if you are interested in performance.
 
-Another interesting solution to watch getting developed is Mesos' Persistence Data support. Twitter itself is actively working on getting MySQL ready with support for this. I am looking forward to see how Galera can make use of this as well.
+In this context of performance note the value `0` of `innodb_flush_log_at_trx_commit` in [`galera.cnf`](https://github.com/sttts/docker-galera-mariadb-10.0/blob/master/conf.d/galera.cnf#L7). Because Galera guarantees synchronous query replication, the file system sync is not important anymore because on a hardware crash the other nodes will still have the data. Hence, the storage speed is less important than in a classical non-Galera setup.
+
+Another interesting solution to watch getting developed in the storage arena is Mesos' native persistence data support. Twitter itself is actively working on getting MySQL ready with support for this. I am looking forward to see how Galera can make use of this as well.
+
+Just a moment ago Docker announced the take-over of SocketPlane. As storage is as important as network in a dynamic cluster world, let's see what happens in this area with all those projects coming up. Exciting times!
 
 ## Recovery
 
