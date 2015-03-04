@@ -25,7 +25,7 @@ When using the containers below or the Mesos Marathon `galera.json` app definiti
 
 ## Running the containers
 
-For the *seed node* and the normal *nodes* the same Docker container is used, namely `sttts/galera-mariadb-10.0-xtrabackup`. As the name suggests it uses MariaDB 10.0 with the Galera extension and xtrabackup for the initial SST (in contrast to rsync). The images are based on Ubuntu 14.04:
+For the *seed node* and the normal *nodes* the same Docker container is used, namely [sttts/galera-mariadb-10.0-xtrabackup](https://registry.hub.docker.com/u/sttts/galera-mariadb-10.0-xtrabackup/). As the name suggests it uses MariaDB 10.0 with the Galera extension and xtrabackup for the initial SST (in contrast to rsync). The images are based on Ubuntu 14.04:
 
 ```bash
 $ docker run -d -v /data:/var/lib/mysql -p 3306 -p 8080 \
