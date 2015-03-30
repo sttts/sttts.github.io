@@ -29,7 +29,7 @@ For the *seed node* and the normal *nodes* the same Docker container is used, na
 
 ```bash
 $ docker run -d -v /data:/var/lib/mysql -p 3306 -p 8080 \
-    -e XTRABACKUP_PASSWORD=abc -e MYSQL_PASSWORD=secret \
+    -e XTRABACKUP_PASSWORD=abc -e MYSQL_ROOT_PASSWORD=secret \
     sttts/galera-mariadb-10.0-xtrabackup seed
 
 $ docker run -d -v /data:/var/lib/mysql -p 3306 -p 8080 \
