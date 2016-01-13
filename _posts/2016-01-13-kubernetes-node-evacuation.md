@@ -5,7 +5,9 @@ date:   2016-01-13 08:21:32
 categories: kubernetes api kubectl
 ---
 
-**"Kubernetes is great in increasing the cluster size by adding new nodes. But it has no way to evacuate and cleanly remove a node."** I have heard this multiple times already. Is this true?
+> Kubernetes is great in increasing the cluster size by adding new nodes. But it has no way to evacuate and cleanly remove a node.
+
+I have heard this multiple times already. Is this true?
 
 In the following I will show how it is easily possible with a bit of bash scripting to evacuate a node. Kubernetes is a very flexible and scriptable system. At the heart of nearly all logic provided by the system itself is nothing more than calls to the apiserver. If there is a feature that seems to be missing, often it is easy to add it with a few API or kubectl calls.
 
