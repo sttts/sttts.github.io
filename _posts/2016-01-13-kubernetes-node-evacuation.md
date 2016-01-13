@@ -40,7 +40,7 @@ busybox-694uu fluentd-cloud-logging-gke-cluster-1-b4c97d4d-node-psh2
 
 This gives us a space separated list of pod names.
 
-Because we use `--all-namespaces`, we also see other namespaces than the `default` one, e.g. the `kube-system namespace with the logging daemon fluentd (on GKE). If we try to delete those pod names, the fluentd deletion will fail. We have to add namespaces to the output (and later use this when calling
+Because we use `--all-namespaces`, we also see other namespaces than the `default` one, e.g. the `kube-system` namespace with the logging daemon fluentd (on GKE). If we try to delete those pod names, the fluentd deletion will fail. We have to add namespaces to the output (and later use this when calling
 `kubectl delete pod --namespace=<namespace>`). That's easy:
 
 ```bash
@@ -59,8 +59,8 @@ We have a list of namespace-pod pairs, separated by spaces (inside each pair and
 $ kubectl get pods --all-namespaces \
    -o jsonpath='{range .items[?(.spec.nodeName=="gke-cluster-1-b4c97d4d-node-psh2")]}{@.metadata.namespace} {.metadata.name} {end}' | \
    xargs -n 2
-default busybox-694uu kube-system
-fluentd-cloud-logging-gke-cluster-1-b4c97d4d-node-psh2
+default busybox-694uu
+kube-system fluentd-cloud-logging-gke-cluster-1-b4c97d4d-node-psh2
 ```
 
 We use xargs another time to call `kubectl delete pods` for each of those lines. Note that xargs is not good in calling commands with multiple parameters, especially if you want to stay compatible with BSD (on Mac) and GNU xargs (on Linux).
